@@ -30,7 +30,7 @@ pub type Decimal = i32;
 /// Provides an enum over [`Decimal`] and string (i.e. [`ValueStr`]) values
 /// to allow ergonomically using and parsing integer values, which is the
 /// main use case for this type.
-#[derive(Copy, Clone, Eq, PartialEq)]
+#[derive(Copy, Clone, Eq)]
 pub enum Value<'a> {
     /// Decimal value.
     Decimal(Decimal),
@@ -96,6 +96,21 @@ impl<'a> TryFrom<&'a str> for Value<'a> {
 
     fn try_from(input: &'a str) -> Result<Self, ParseError> {
         Self::new(input)
+    }
+}
+
+impl<'a> PartialEq for Value<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        match self {
+            Value::Decimal(a) => match other {
+                Value::Decimal(b) => a == b,
+                Value::Str(b_str) => b_str.decimal().map(|b| *a == b).unwrap_or(false),
+            },
+            Value::Str(a_str) => match other {
+                Value::Decimal(b) => a_str.decimal().map(|a| a == *b).unwrap_or(false),
+                Value::Str(b) => a_str == b,
+            },
+        }
     }
 }
 

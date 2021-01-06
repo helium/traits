@@ -164,6 +164,9 @@ impl PartialEq for Output {
             return false;
         }
 
+        // Non-short-circuiting comparison.
+        //
+        // See "Constant-time comparisons" notes on `Output` for more info.
         self.as_ref()
             .iter()
             .zip(other.as_ref().iter())
