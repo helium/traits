@@ -531,7 +531,7 @@ where
 {
     /// Serialize this value as a SEC1 [`EncodedPoint`], optionally applying
     /// point compression.
-    fn to_compact_encoded_point(&self) -> EncodedPoint<C>;
+    fn to_compact_encoded_point(&self) -> Option<EncodedPoint<C>>;
 }
 
 
